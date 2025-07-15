@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">  
+  <title>لوحة مهام البيت - للعاملة النيبالية</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>
+    :root {
+      --main-bg: #f5e4e2;
+      --btn: #d4a3a3;
+      --btn-text: #fff;
+      --border: #efd7df;
+      --card: #fff;
+      --shadow: 0 4px 16px #0001;
+      --todo-bg: #ddebf5;
+      --todo-header-bg: #b7c9d8;
+      --inprogress-bg: #f6f5ee;
+      --inprogress-header-bg: #d2cfc4;
+      --done-bg: #e0ece7;
+      --done-header-bg: #b9c9c0;
+      --header-text: #fff;
+      --calendar-bg: #f9fafc;
+      --calendar-border: #b7c9d8;
+      --calendar-today: #d4a3a3;
+      --calendar-today-text: #fff;
+      --calendar-selected: #afd0e9;
+      --calendar-header-bg: #e4d7d7;
+    }
+    body {
+      font-family: 'Cairo', Arial, Tahoma, sans-serif;
+      background: var(--main-bg);
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 1150px;
+      margin: 44px auto;
+      background: var(--card);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      padding: 28px 18px 36px 18px;
+      border: 1.8px solid var(--border);
+      position: relative;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 24px;
+      color: #333;
+      font-weight: 800;
+      font-size: 2.3rem;
+      letter-spacing: 1px;
+      word-spacing: 2px;
+    }
+    
+    .add-task {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 22px;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .add-task input[type="text"] {
+      font-size: 1.15rem;
+      padding: 10px 18px;
+      border-radius: 12px;
+      border: 1.5px solid #dadada;
+      outline: none;
+      width: 230px;
+      background: #f7f8fa;
+      font-family: 'Cairo', Arial, Tahoma, sans-serif;
+      transition: border 0.2s;
+    }
+    .add-task input[type="date"] {
+      font-size: 1.09rem;
+      padding: 9px 12px;
+      border-radius: 12px;
+      border: 1.2px solid #dadada;
+      outline: none;
+      background: #f7f8fa;
+      font-family: 'Cairo', Arial, Tahoma, sans-serif;
+      transition: border 0.2s;
+      width: 140px;
+    }
+    .add-task input[type="text"]:focus,
+    .add-task input[type="date"]:focus {
+      border-color: #b4b4b4;
+    }
+    .add-task button {
+      font-size: 1.13rem;
+      padding: 10px 30px;
+      border-radius: 12px;
+      background: var(--btn);
+      color: var(--btn-text);
+      border: none;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.18s, color 0.15s;
+      box-shadow: 0 2px 8px #ddd2;
+      border: 1.3px solid #e0e0e0;
+      letter-spacing: 1px;
+      font-family: 'Cairo', Arial, Tahoma, sans-serif;
+    }
+    .add-task button:hover {
+      background: #b48888;
+      color: #fff;
+    }
+    .show-all-btn {
+  display: none;
+  margin: 10px auto 0 auto;
+  background: #d4a3a3;   /* نفس لون زر الإضافة */
+  color: #fff;           /* خط أبيض */
+  font-family: 'Cairo', Arial, Tahoma, sans-serif;
+  font-size: 1.09em;
+  padding: 9px 26px;
+  border: none;
+  border-radius: 10px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px #efd7df88;
+  transition: background 0.18s;
+}
+.show-all-btn {
+  display: block !important;
+}
+.show-all-btn:hover {
+  background: #b48888;
+}
+
+    }
+    .show-all-btn.active {
+      display: block;
+    }
+    .kanban {
+      display: flex;
+      gap: 30px;
+      margin-top: 12px;
+    }
+    .column {
+      flex: 1;
+      border-radius: 20px;
+      padding: 20px 10px 18px 10px;
+      min-height: 320px;
+      box-shadow: 0 1px 10px #0001;
+      border: 1.3px solid #eee;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      background: var(--col-bg);
+    }
+    #todo {
+      background: var(--todo-bg) !important;
+    }
+    #inprogress {
+      background: var(--inprogress-bg) !important;
+    }
+    #done {
+      background: var(--done-bg) !important;
+    }
+    #todo h3 {
+      background: var(--todo-header-bg) !important;
+      color: var(--header-text) !important;
+    }
+    #inprogress h3 {
+      background: var(--inprogress-header-bg) !important;
+      color: var(--header-text) !important;
+    }
+    #done h3 {
+      background: var(--done-header-bg) !important;
+      color: var(--header-text) !important;
+    }
+    .column h3 {
+      text-align: center;
+      margin: 0 0 18px 0;
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: .5px;
+      border-radius: 12px;
+      padding: 10px 0 8px 0;
+      box-shadow: 0 1px 6px #0001;
+      font-family: 'Cairo', Arial, Tahoma, sans-serif;
+    }
+    .task {
+      background: var(--card);
+      margin-bottom: 13px;
+      padding: 14px 11px;
+      border-radius: 14px;
+      box-shadow: 0 1px 8px #0001;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      border: 1.1px solid #ededed;
+      transition: transform 0.07s;
+      font-size: 1.06rem;
+      font-family: 'Cairo', Arial, Tahoma, sans-serif;
+    }
+    .task:hover { transform: scale(1.015); }
+    .task b { color: #666; }
+   .task .date {
+  font-size: 0.95em;
+  color: #8a6d7c;
+  margin-top: 2px;
+  direction: rtl;
+  text-align: right;
+  font-family: 'Cairo', Arial, Tahoma, sans-serif;
+}
+
+    }
+    .move-btns {
+      margin-top: 6px;
+      display: flex;
+      gap: 7px;
+      flex-wrap: wrap;
+      justify-content: start;
+    }
+    .task button {
+      padding: 5px 13px;
+      border-radius: 8px;
+      font-size: 15px;
+      background: #aaa;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      font-family: 'Cairo', Arial, Tahoma, sans-serif;
+      font-weight: 600;
+      box-shadow: 0 1px 4px #0002;
+      transition: background 0.16s;
+    }
+    .task button:hover { background: #565656;}
+    .task .whatsapp {
+      background: #25d366;
+      color: #fff;
+      font-weight: bold;
+      padding: 5px 10px;
+      font-size: 15px;
+    }
+    .task .whatsapp:hover { background: #128c7e;}
+    .task .delete-btn { background: #f43f5e; }
+    .task .delete-btn:hover { background: #d72645;}
+    .calendar-box {
+      background: var(--calendar-bg);
+      border: 1.3px solid var(--calendar-border);
+      border-radius: 18px;
+      width: 100%;
+      max-width: 100%;
+      margin: 34px auto 0 auto;
+      box-shadow: 0 1px 10px #0001;
+      padding: 18px 8px 12px 8px;
+      font-family: 'Cairo', Arial, Tahoma, sans-serif;
+      display: block;
+    }
+    .calendar-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      background: var(--calendar-header-bg);
+      border-radius: 12px;
+      padding: 8px 18px;
+      font-size: 1.11em;
+    }
+    .calendar-header button {
+      background: var(--btn);
+      color: var(--btn-text);
+      border: none;
+      border-radius: 8px;
+      padding: 3px 14px;
+      font-size: 1.15rem;
+      font-family: 'Cairo', Arial, Tahoma, sans-serif;
+      cursor: pointer;
+      font-weight: 700;
+      transition: background 0.18s;
+    }
+    .calendar-header button:hover {
+      background: #b48888;
+    }
+    .calendar-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: center;
+      font-size: 1.07rem;
+      user-select: none;
+      font-family: 'Cairo', Arial, Tahoma, sans-serif;
+      margin-bottom: 0;
+      direction: rtl;
+    }
+    .calendar-table th {
+      color: #6d7a88;
+      padding-bottom: 7px;
+      font-weight: 800;
+      font-size: 1.09em;
+    }
+    .calendar-table td {
+      padding: 11px 0;
+      border-radius: 8px;
+      font-family: 'Cairo', Arial, Tahoma, sans-serif;
+      transition: background 0.1s;
+      cursor: pointer;
+      font-size: 1.05em;
+      font-weight: 600;
+    }
+    .calendar-table td.today {
+      background: var(--calendar-today);
+      color: var(--calendar-today-text);
+      font-weight: bold;
+    }
+    .calendar-table td.selected {
+      background: var(--calendar-selected);
+      color: #222;
+      font-weight: bold;
+      box-shadow: 0 0 0 2px #a4bfd7;
+    }
+    .calendar-table td:not(.today):not(.selected):hover {
+      background: #ececec;
+      color: #222;
+    }
+    .calendar-table td.disabled {
+      color: #ccc;
+      background: transparent;
+      pointer-events: none;
+    }
+    @media (max-width: 1000px) {
+      .kanban { flex-direction: column; gap: 18px;}
+      .container {padding: 10px 2vw 20px 2vw;}
+      .column { min-height: 180px;}
+      .add-task input[type="text"], .add-task input[type="date"] { width: 100%; }
+      .calendar-box { padding: 12px 2vw 12px 2vw;}
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>لوحة مهام البيت <span style="font-size:1.1rem; color:#d4a3a3; font-weight:600;">للعاملة النيبالية</span></h2>
+    <div id="lockArea" style="position:absolute; top:22px; left:22px; z-index:3;">
+  <img id="lockIcon" src="https://cdn-icons-png.flaticon.com/512/3064/3064155.png" alt="قفل" title="تفعيل الحذف" 
+    style="width:34px; height:34px; cursor:pointer; filter: drop-shadow(0 1px 4px #0001);" />
+</div>
+    <form class="add-task" onsubmit="return addTask(event)">
+      <input type="text" id="taskInput" placeholder="المهمة ..." required>
+      <input type="date" id="dateInput" required>
+      <button type="submit">إضافة</button>
+    </form>
+    <button class="show-all-btn" id="showAllBtn" onclick="showAllTasks()">عرض جميع المهام</button>
+    <div class="kanban">
+      <div class="column" id="todo">
+        <h3>To Do गर्नु पर्ने</h3>
+      </div>
+      <div class="column" id="inprogress">
+        <h3>In Progress  प्रगति</h3>
+      </div>
+      <div class="column" id="done">
+        <h3>Done पूरा</h3>
+      </div>
+    </div>
+    <div class="calendar-box" id="calendarBox"></div>
+  </div>
+  <script>
+    let deleteEnabled = false;
+    let tasks = [];
+    let selectedDate = null;
+
+    if (localStorage.tasksNepaliBoard) {
+      tasks = JSON.parse(localStorage.tasksNepaliBoard);
+    }
+
+    // ترجمة من أي لغة إلى النيبالية
+    async function translateToNepali(text) {
+      const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=ne&dt=t&q=${encodeURIComponent(text)}`;
+      try {
+        const res = await fetch(url);
+        const data = await res.json();
+        return data[0][0][0];
+      } catch {
+        return "⚠️ لم تتم الترجمة!";
+      }
+    }
+
+    async function addTask(e) {
+      e.preventDefault();
+      const input = document.getElementById('taskInput');
+      const dateInput = document.getElementById('dateInput');
+      const text = input.value.trim();
+      const date = dateInput.value;
+      if (!text || !date) return;
+      const nepali = await translateToNepali(text);
+      tasks.push({arabic: text, nepali, date, status: 'todo'});
+      input.value = '';
+      dateInput.value = '';
+      saveAndRender();
+    }
+
+    function moveTask(idx, dir) {
+      const statuses = ['todo', 'inprogress', 'done'];
+      let now = statuses.indexOf(tasks[idx].status);
+      let next = now + dir;
+      if (next >= 0 && next < statuses.length) {
+        tasks[idx].status = statuses[next];
+        saveAndRender();
+      }
+    }
+    function deleteTask(idx) {
+  if (!deleteEnabled) return; // إذا لم يتم تفعيل الحذف، لا شيء
+  Swal.fire({
+    title: 'هل أنتِ متأكدة؟',
+    text: 'سيتم حذف هذه المهمة نهائيًا.',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#d4a3a3',
+    cancelButtonColor: '#bbb',
+    confirmButtonText: 'نعم، احذفها',
+    cancelButtonText: 'لا، إلغاء',
+    allowOutsideClick: false,
+    allowEscapeKey: false,
+    reverseButtons: true
+  }).then((result) => {
+    if (result.isConfirmed) {
+      tasks.splice(idx, 1);
+      saveAndRender();
+      Swal.fire({
+        icon: 'success',
+        title: 'تم الحذف!',
+        text: 'تم حذف المهمة بنجاح.',
+        confirmButtonColor: '#d4a3a3',
+        timer: 1200,
+        showConfirmButton: false
+      });
+    }
+  });
+}
+
+ const maidPhone = "96560040620"; // اكتبي رقم العاملة كامل بدون + أو 00
+
+  function sendWhatsApp(msg) {
+  const phone = maidPhone;
+  if (phone) {
+    const url = `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
+    window.open(url, '_blank');
+  }
+}
+
+
+    function saveAndRender() {
+      localStorage.tasksNepaliBoard = JSON.stringify(tasks);
+      renderTasks();
+    }
+
+    function renderTasks() {
+      ['todo','inprogress','done'].forEach(col=>{
+        document.getElementById(col).innerHTML = document.getElementById(col).querySelector('h3').outerHTML;
+      });
+      // فلترة حسب اليوم إذا كان فيه يوم مختار
+      let tasksToShow = (!selectedDate) ? tasks : tasks.filter(t => t.date === selectedDate);
+      tasksToShow.forEach((task, idx) => {
+        const el = document.createElement('div');
+        el.className = 'task';
+        el.innerHTML = `
+          <div><b>المهمة:</b> ${task.arabic}</div>
+          <div><b>بالنيبالية:</b> ${task.nepali}</div>
+          <div class="date"><b>التاريخ:</b> ${formatDate(task.date)}</div>
+          <div class="move-btns">
+            <button title="سابق" onclick="moveTask(${tasks.indexOf(task)}, -1)">➡</button>
+            <button title="التالي" onclick="moveTask(${tasks.indexOf(task)}, 1)">⬅</button>
+            <button class="delete-btn" onclick="deleteTask(${tasks.indexOf(task)})">حذف</button>
+            <button class="whatsapp" onclick="sendWhatsApp('${task.nepali}')">WhatsApp</button>
+          </div>
+        `;
+        document.getElementById(task.status).appendChild(el);
+      });
+      // زر عرض كل المهام
+      document.getElementById('showAllBtn').classList.toggle('active', !!selectedDate);
+    }
+
+    function showAllTasks() {
+      selectedDate = null;
+      renderTasks();
+      renderCalendar(currentMonth, currentYear);
+    }
+
+    function formatDate(dateStr) {
+      const months = [
+        'يناير','فبراير','مارس','إبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'
+      ];
+      if (!dateStr) return '';
+      const [y, m, d] = dateStr.split('-');
+      return `${d} ${months[parseInt(m,10)-1]} ${y}`;
+    }
+
+    window.moveTask = moveTask;
+    window.deleteTask = deleteTask;
+    window.sendWhatsApp = sendWhatsApp;
+    window.showAllTasks = showAllTasks;
+
+    // ============ الكالندر مع ربط بالتاريخ ============
+    function renderCalendar(month, year) {
+      const calendarBox = document.getElementById('calendarBox');
+      const today = new Date();
+      const isThisMonth = month === today.getMonth() && year === today.getFullYear();
+      const months = [
+        'يناير','فبراير','مارس','إبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'
+      ];
+      const days = ['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+
+      let firstDay = (new Date(year, month, 1)).getDay();
+      firstDay = (firstDay + 6) % 7;
+      let numDays = new Date(year, month + 1, 0).getDate();
+
+      let calendarHTML = `
+        <div class="calendar-header">
+          <button onclick="changeMonth(-1)">&lt;</button>
+          <span style="font-size:1.19em;font-weight:700;">${months[month]} ${year}</span>
+          <button onclick="changeMonth(1)">&gt;</button>
+        </div>
+        <table class="calendar-table" dir="rtl">
+          <tr>
+            ${days.map(d=>`<th>${d}</th>`).join('')}
+          </tr>
+      `;
+
+      let date = 1;
+      for (let i = 0; i < 6; i++) {
+        calendarHTML += '<tr>';
+        for (let j = 0; j < 7; j++) {
+          if (i === 0 && j < firstDay) {
+            calendarHTML += '<td class="disabled"></td>';
+          } else if (date > numDays) {
+            calendarHTML += '<td class="disabled"></td>';
+          } else {
+            // تحديد اليوم الحالي/المختار
+            let isToday = isThisMonth && date === today.getDate();
+            let dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(date).padStart(2,'0')}`;
+            let isSelected = selectedDate === dateStr;
+            calendarHTML += `<td${isToday ? ' class="today"' : ''}${isSelected ? ' class="selected"' : ''} onclick="selectDay('${dateStr}')">${date}</td>`;
+            date++;
+          }
+        }
+        calendarHTML += '</tr>';
+        if (date > numDays) break;
+      }
+      calendarHTML += '</table>';
+      calendarBox.innerHTML = calendarHTML;
+    }
+
+    let currentMonth = (new Date()).getMonth();
+    let currentYear = (new Date()).getFullYear();
+
+    function changeMonth(delta) {
+      currentMonth += delta;
+      if (currentMonth < 0) {
+        currentMonth = 11;
+        currentYear--;
+      } else if (currentMonth > 11) {
+        currentMonth = 0;
+        currentYear++;
+      }
+      renderCalendar(currentMonth, currentYear);
+    }
+
+    function selectDay(dateStr) {
+      selectedDate = dateStr;
+      renderTasks();
+      renderCalendar(currentMonth, currentYear);
+    }
+    document.getElementById('lockIcon').onclick = function() {
+  if (deleteEnabled) return; // إذا التفعيل موجود تجاهل الضغط
+  Swal.fire({
+    title: 'فتح صلاحية الحذف',
+    text: 'يرجى إدخال كلمة المرور:',
+    input: 'password',
+    inputPlaceholder: 'كلمة المرور',
+    icon: 'question',
+    showCancelButton: true,
+    confirmButtonColor: '#d4a3a3',
+    cancelButtonColor: '#bbb',
+    confirmButtonText: 'تفعيل',
+    cancelButtonText: 'إلغاء',
+    allowOutsideClick: false,
+    allowEscapeKey: false,
+    reverseButtons: true,
+    inputAttributes: {
+      autocapitalize: 'off',
+      autocorrect: 'off'
+    }
+  }).then((result) => {
+    if (result.isConfirmed) {
+      const password = '2410';
+      if (result.value === password) {
+        deleteEnabled = true;
+        Swal.fire({
+          icon: 'success',
+          title: 'تم تفعيل الحذف',
+          text: 'الآن يمكنك حذف المهام.',
+          confirmButtonColor: '#d4a3a3',
+          timer: 1500,
+          showConfirmButton: false
+        });
+        // غيّر شكل القفل ليصير مفتوح (اختياري)
+        document.getElementById('lockIcon').src = 'https://cdn-icons-png.flaticon.com/512/3064/3064197.png';
+        document.getElementById('lockIcon').title = 'الحذف مُفعّل';
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'كلمة المرور غير صحيحة',
+          text: 'لم يتم تفعيل الحذف.',
+          confirmButtonColor: '#d4a3a3'
+        });
+      }
+    }
+  });
+};
+
+    window.changeMonth = changeMonth;
+    window.selectDay = selectDay;
+
+    // أول تشغيل
+    renderTasks();
+    renderCalendar(currentMonth, currentYear);
+  </script>
+</body>
+</html>
