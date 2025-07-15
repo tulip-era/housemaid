@@ -10,7 +10,7 @@
       --main-bg: #f5e4e2;
       --btn: #d4a3a3;
       --btn-text: #fff;
-      --border: #efd7df;
+      --border: #d4a3a3;
       --card: #fff;
       --shadow: 0 4px 16px #0001;
       --todo-bg: #ddebf5;
@@ -21,10 +21,10 @@
       --done-header-bg: #b9c9c0;
       --header-text: #fff;
       --calendar-bg: #f9fafc;
-      --calendar-border: #b7c9d8;
+      --calendar-border: #d4a3a3;
       --calendar-today: #d4a3a3;
       --calendar-today-text: #fff;
-      --calendar-selected: #afd0e9;
+      --calendar-selected: #f5e4e2;
       --calendar-header-bg: #e4d7d7;
     }
     body {
@@ -332,7 +332,7 @@
 </head>
 <body>
   <div class="container">
-    <h2>لوحة مهام البيت <span style="font-size:1.1rem; color:#d4a3a3; font-weight:600;">للعاملة النيبالية</span></h2>
+    <h2>لوحة مهام البيت <span style="font-size:1.1rem; color:#d4a3a3; font-weight:600;">Kabita Payar</span></h2>
     <div id="lockArea" style="position:absolute; top:22px; left:22px; z-index:3;">
   <img id="lockIcon" src="https://cdn-icons-png.flaticon.com/512/3064/3064155.png" alt="قفل" title="تفعيل الحذف" 
     style="width:34px; height:34px; cursor:pointer; filter: drop-shadow(0 1px 4px #0001);" />
