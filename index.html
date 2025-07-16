@@ -1,8 +1,8 @@
-<!DOCTYPE html>
+<!-- Prepared by: Eng. Aisha Alhuwais -->
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">  
-  <title>لوحة مهام البيت - للعاملة النيبالية</title>
+  <title>To Do List - Aishah </title>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <style>
@@ -109,8 +109,8 @@
     .show-all-btn {
   display: none;
   margin: 10px auto 0 auto;
-  background: #d4a3a3;   /* نفس لون زر الإضافة */
-  color: #fff;           /* خط أبيض */
+  background: #d4a3a3;
+  color: #fff;        
   font-family: 'Cairo', Arial, Tahoma, sans-serif;
   font-size: 1.09em;
   padding: 9px 26px;
@@ -401,7 +401,7 @@
       }
     }
     function deleteTask(idx) {
-  if (!deleteEnabled) return; // إذا لم يتم تفعيل الحذف، لا شيء
+  if (!deleteEnabled) return; 
   Swal.fire({
     title: 'هل أنتِ متأكدة؟',
     text: 'سيتم حذف هذه المهمة نهائيًا.',
@@ -430,8 +430,7 @@
   });
 }
 
- const maidPhone = "96560040620"; // اكتبي رقم العاملة كامل بدون + أو 00
-
+ const maidPhone = "96560040620"; 
   function sendWhatsApp(msg) {
   const phone = maidPhone;
   if (phone) {
@@ -450,7 +449,6 @@
       ['todo','inprogress','done'].forEach(col=>{
         document.getElementById(col).innerHTML = document.getElementById(col).querySelector('h3').outerHTML;
       });
-      // فلترة حسب اليوم إذا كان فيه يوم مختار
       let tasksToShow = (!selectedDate) ? tasks : tasks.filter(t => t.date === selectedDate);
       tasksToShow.forEach((task, idx) => {
         const el = document.createElement('div');
@@ -502,44 +500,43 @@
       ];
       const days = ['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
 
-      let firstDay = (new Date(year, month, 1)).getDay();
-      firstDay = (firstDay + 6) % 7;
-      let numDays = new Date(year, month + 1, 0).getDate();
+      let firstDay = (new Date(year, month, 1)).getDay(); // 0 = الأحد
+let numDays = new Date(year, month + 1, 0).getDate();
 
-      let calendarHTML = `
-        <div class="calendar-header">
-          <button onclick="changeMonth(-1)">&lt;</button>
-          <span style="font-size:1.19em;font-weight:700;">${months[month]} ${year}</span>
-          <button onclick="changeMonth(1)">&gt;</button>
-        </div>
-        <table class="calendar-table" dir="rtl">
-          <tr>
-            ${days.map(d=>`<th>${d}</th>`).join('')}
-          </tr>
-      `;
+let calendarHTML = `
+  <div class="calendar-header">
+    <button onclick="changeMonth(-1)">&lt;</button>
+    <span style="font-size:1.19em;font-weight:700;">${months[month]} ${year}</span>
+    <button onclick="changeMonth(1)">&gt;</button>
+  </div>
+  <table class="calendar-table" dir="rtl">
+    <tr>
+      ${days.map(d=>`<th>${d}</th>`).join('')}
+    </tr>
+`;
 
-      let date = 1;
-      for (let i = 0; i < 6; i++) {
-        calendarHTML += '<tr>';
-        for (let j = 0; j < 7; j++) {
-          if (i === 0 && j < firstDay) {
-            calendarHTML += '<td class="disabled"></td>';
-          } else if (date > numDays) {
-            calendarHTML += '<td class="disabled"></td>';
-          } else {
-            // تحديد اليوم الحالي/المختار
-            let isToday = isThisMonth && date === today.getDate();
-            let dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(date).padStart(2,'0')}`;
-            let isSelected = selectedDate === dateStr;
-            calendarHTML += `<td${isToday ? ' class="today"' : ''}${isSelected ? ' class="selected"' : ''} onclick="selectDay('${dateStr}')">${date}</td>`;
-            date++;
-          }
-        }
-        calendarHTML += '</tr>';
-        if (date > numDays) break;
-      }
-      calendarHTML += '</table>';
-      calendarBox.innerHTML = calendarHTML;
+let date = 1;
+for (let i = 0; i < 6; i++) {
+  calendarHTML += '<tr>';
+  for (let j = 0; j < 7; j++) {
+    if (i === 0 && j < firstDay) {
+      calendarHTML += '<td class="disabled"></td>';
+    } else if (date > numDays) {
+      calendarHTML += '<td class="disabled"></td>';
+    } else {
+      let isToday = isThisMonth && date === today.getDate();
+      let dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(date).padStart(2,'0')}`;
+      let isSelected = selectedDate === dateStr;
+      calendarHTML += `<td${isToday ? ' class="today"' : ''}${isSelected ? ' class="selected"' : ''} onclick="selectDay('${dateStr}')">${date}</td>`;
+      date++;
+    }
+  }
+  calendarHTML += '</tr>';
+  if (date > numDays) break;
+}
+calendarHTML += '</table>';
+calendarBox.innerHTML = calendarHTML;
+
     }
 
     let currentMonth = (new Date()).getMonth();
@@ -563,7 +560,7 @@
       renderCalendar(currentMonth, currentYear);
     }
     document.getElementById('lockIcon').onclick = function() {
-  if (deleteEnabled) return; // إذا التفعيل موجود تجاهل الضغط
+  if (deleteEnabled) return; 
   Swal.fire({
     title: 'فتح صلاحية الحذف',
     text: 'يرجى إدخال كلمة المرور:',
@@ -595,7 +592,7 @@
           timer: 1500,
           showConfirmButton: false
         });
-        // غيّر شكل القفل ليصير مفتوح (اختياري)
+
         document.getElementById('lockIcon').src = 'https://cdn-icons-png.flaticon.com/512/3064/3064197.png';
         document.getElementById('lockIcon').title = 'الحذف مُفعّل';
       } else {
@@ -613,7 +610,6 @@
     window.changeMonth = changeMonth;
     window.selectDay = selectDay;
 
-    // أول تشغيل
     renderTasks();
     renderCalendar(currentMonth, currentYear);
   </script>
