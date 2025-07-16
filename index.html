@@ -239,18 +239,20 @@
     .task .whatsapp:hover { background: #128c7e;}
     .task .delete-btn { background: #f43f5e; }
     .task .delete-btn:hover { background: #d72645;}
-    .calendar-box {
-      background: var(--calendar-bg);
-      border: 1.3px solid var(--calendar-border);
-      border-radius: 18px;
-      width: 100%;
-      max-width: 100%;
-      margin: 34px auto 0 auto;
-      box-shadow: 0 1px 10px #0001;
-      padding: 18px 8px 12px 8px;
-      font-family: 'Cairo', Arial, Tahoma, sans-serif;
-      display: block;
-    }
+   .calendar-box {
+  background: var(--calendar-bg);
+  border: 1.3px solid var(--calendar-border);
+  border-radius: 18px;
+  width: 96%;
+  margin: 38px auto 0 auto; 
+  box-shadow: 0 1px 10px #0001;
+  padding: 22px 24px 18px 24px;  
+  font-family: 'Cairo', Arial, Tahoma, sans-serif;
+  display: block;
+  min-width: 270px;
+  max-width: 99%;
+}
+
     .calendar-header {
       display: flex;
       align-items: center;
@@ -328,6 +330,17 @@
       .add-task input[type="text"], .add-task input[type="date"] { width: 100%; }
       .calendar-box { padding: 12px 2vw 12px 2vw;}
     }
+    @media (max-width: 700px) {
+  .calendar-box {
+    padding: 6px 1vw 6px 1vw !important;
+    margin-top: 16px !important;
+  }
+  .container {
+    padding: 6px 0 16px 0 !important;
+    border-radius: 10px !important;
+  }
+}
+
   </style>
 </head>
 <body>
