@@ -345,7 +345,7 @@
 </head>
 <body>
   <div class="container">
-    <h2>لوحة مهام البيت <span style="font-size:1.1rem; color:#d4a3a3; font-weight:600;">Kabita Payar</span></h2>
+    <h2>घरको कार्यसूची पाटी <span style="font-size:1.1rem; color:#d4a3a3; font-weight:600;"> Kabita Payar</span></h2>
     <div id="lockArea" style="position:absolute; top:22px; left:22px; z-index:3;">
   <img id="lockIcon" src="https://cdn-icons-png.flaticon.com/512/3064/3064155.png" alt="قفل" title="تفعيل الحذف" 
     style="width:34px; height:34px; cursor:pointer; filter: drop-shadow(0 1px 4px #0001);" />
@@ -355,16 +355,16 @@
       <input type="date" id="dateInput" required>
       <button type="submit">إضافة</button>
     </form>
-    <button class="show-all-btn" id="showAllBtn" onclick="showAllTasks()">عرض جميع المهام</button>
+    <button class="show-all-btn" id="showAllBtn" onclick="showAllTasks()">सबै कार्यहरू देखाउनुहोस्</button>
     <div class="kanban">
       <div class="column" id="todo">
-        <h3>To Do गर्नु पर्ने</h3>
+        <h3>गर्नु पर्ने</h3>
       </div>
       <div class="column" id="inprogress">
-        <h3>In Progress  प्रगति</h3>
+        <h3>प्रगति</h3>
       </div>
       <div class="column" id="done">
-        <h3>Done पूरा</h3>
+        <h3>पूरा</h3>
       </div>
     </div>
     <div class="calendar-box" id="calendarBox"></div>
@@ -509,9 +509,17 @@
       const today = new Date();
       const isThisMonth = month === today.getMonth() && year === today.getFullYear();
       const months = [
-        'يناير','فبراير','مارس','إبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'
-      ];
-      const days = ['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+  'जनवरी','फेब्रुअरी','मार्च','अप्रिल','मे','जुन','जुलाई','अगस्ट','सेप्टेम्बर','अक्टोबर','नोभेम्बर','डिसेम्बर'];
+
+    const days = [
+  'आइतबार',   // الأحد
+  'सोमबार',   // الاثنين
+  'मंगलबार',  // الثلاثاء
+  'बुधबार',   // الأربعاء
+  'बिहीबार',  // الخميس
+  'शुक्रबार',  // الجمعة
+  'शनिबार'    // السبت
+];
 
       let firstDay = (new Date(year, month, 1)).getDay(); // 0 = الأحد
 let numDays = new Date(year, month + 1, 0).getDate();
